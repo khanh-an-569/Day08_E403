@@ -120,7 +120,7 @@ def format_context(chunks: list[dict]) -> str:
 # GENERATION
 # =============================================================================
 
-def generate_with_citation(query: str, top_k: int = TOP_K, chat_history: list = None) -> dict:
+def generate_with_citation(query: str, top_k: int = TOP_K, chat_history: list = None, use_reranking: bool = True) -> dict:
     """
     End-to-end RAG generation có citation.
 
@@ -136,6 +136,7 @@ def generate_with_citation(query: str, top_k: int = TOP_K, chat_history: list = 
         query: Câu hỏi của user
         top_k: Số lượng chunks đưa vào context
         chat_history: Danh sách tin nhắn trước đó để giữ ngữ cảnh hội thoại
+        use_reranking: Có sử dụng reranking trong retrieval không
 
     Returns:
         {
@@ -145,7 +146,7 @@ def generate_with_citation(query: str, top_k: int = TOP_K, chat_history: list = 
         }
     """
     # Step 1: Retrieve
-    chunks = retrieve(query, top_k=top_k)
+    chunks = retrieve(query, top_k=top_k, use_reranking=use_reranking)
 
     # Step 2: Reorder
     reordered = reorder_for_llm(chunks)
