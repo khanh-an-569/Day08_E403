@@ -1,0 +1,30 @@
+# Rapper Bình ‘Gold’ dương tính ma túy khi lái xe, có dấu hiệu gây rối trật tự công cộng
+
+**Source:** https://tuoitre.vn/rapper-binh-gold-duong-tinh-ma-tuy-khi-lai-xe-co-dau-hieu-gay-roi-trat-tu-cong-cong-20250724080230866.htm
+
+**Crawled:** 2026-06-08T15:43:07.306993
+
+---
+
+Nam tài xế vi phạm bị cảnh sát giao thông tìm ra - Ảnh: D.C.
+Liên quan vụ "Từ clip xe Audi chèn ép ô tô khác trên cao tốc, tìm ra tài xế dương tính với ma túy", trao đổi với
+Tuổi Trẻ Online
+sáng 24-7, đại diện Cục Cảnh sát giao thông cho biết tài xế vi phạm được xác định là Vũ Xuân Bình (sinh năm 1997, trú tại Hà Bắc, Hải Phòng). Đây là nam rapper có tên Bình "Gold".
+Khoảng 18h ngày 23-7, Bình điều khiển xe ô tô Audi, biển số Hà Nội chạy trên tuyến cao tốc Nội Bài - Lào Cai.
+Ô tô này sau đó có dấu hiệu lạng lách, chèn ép các xe khác đi cùng chiều. Một đoạn clip do tài xế đi đường ghi lại cho thấy chiếc xe này còn chặn đầu, không cho ô tô khác di chuyển ở làn đường có tốc độ tối đa tới 100km/h.
+"Hành vi này có dấu hiệu gây rối trật tự công cộng trên tuyến cao tốc Nội Bài - Lào Cai", theo Cục Cảnh sát giao thông.
+Chiếc xe Audi chèn ép ô tô khác trên đường cao tốc - Ảnh: D.Q.
+Ngay sau khi nắm bắt được thông tin trên mạng xã hội, cục trưởng Cục Cảnh sát giao thông đã chỉ đạo lực lượng cảnh sát giao thông trên tuyến tổ chức xác minh, truy tìm.
+Gần 22h cùng ngày, lực lượng chức năng đã dừng xe, tiến hành kiểm soát đối với Vũ Xuân Bình.
+Kết quả kiểm tra cho thấy người này dương tính với chất ma túy (loại cần sa, bồ đà).
+Vụ việc sau đó được lực lượng cảnh sát giao thông bàn giao cho cơ quan chức năng tỉnh Lào Cai xử lý theo thẩm quyền.
+Cục Cảnh sát giao thông đồng thời cho hay đối với các hành vi coi thường pháp luật, chạy xe lạng lách hoặc những vi phạm pháp luật khác, được quần chúng nhân dân phản ánh, Cục trưởng Cục Cảnh sát giao thông đều chỉ đạo xử lý nghiêm.
+Cục trưởng Cục Cảnh sát giao thông đồng thời cảm ơn quần chúng nhân dân đã quan tâm, chung tay cùng lực lượng xây dựng nếp sống văn minh, an toàn.
+Rapper Bình Gold
+sinh năm 1997 tại Hà Nội, được nhiều người biết đến từ MV
+Bốc bát họ
+, từng kết hợp với một số rapper đàn anh và ca sĩ khác. Bình "Gold" theo trường phái mumble rap, từng bị VTV nêu tên trong số những nghệ sĩ có sản phẩm dung tục, phản cảm.
+Từ clip xe Audi chèn ép ô tô khác trên cao tốc, tìm ra tài xế dương tính với ma túy
+Một đoạn clip do tài xế đi đường ghi lại cho thấy chiếc xe này chặn đầu, không cho ô tô khác di chuyển ở làn đường có tốc độ tối đa tới 100km/h.
+Đọc tiếp
+Về trang Chủ đề

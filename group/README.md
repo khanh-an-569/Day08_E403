@@ -517,8 +517,64 @@ run_dashboard()
 
 ### Kiến Trúc Hệ Thống
 
-```
-[Vẽ diagram kiến trúc ở đây]
+```mermaid
+graph TD
+
+    User([Người dùng])
+    UI["Streamlit UI Chatbot<br/>app.py"]
+
+    Rewriter["Query Rewriter<br/>Memory-Aware"]
+    Pipeline["Retrieval Pipeline<br/>task9_retrieval_pipeline.py"]
+
+    Semantic["Semantic Search<br/>task5_semantic_search.py"]
+    Lexical["Lexical Search BM25<br/>task6_lexical_search.py"]
+
+    VectorDB[("Vector Store<br/>Weaviate / ChromaDB")]
+    BM25Index[("BM25 Index<br/>Rank-BM25")]
+
+    Merge["Merge & Rerank<br/>task7_reranking.py"]
+    Decision{"Đạt Threshold?"}
+
+    PageIndex["PageIndex Fallback<br/>task8_pageindex_vectorless.py"]
+
+    Reorder["Document Reordering<br/>task10_generation.py"]
+    LLM["LLM Generation & Citation<br/>task10_generation.py"]
+
+    User -->|"Nhập câu hỏi"| UI
+    UI -->|"Gửi query + lịch sử chat"| Rewriter
+    Rewriter -->|"Query đã tối ưu ngữ cảnh"| Pipeline
+
+    Pipeline -->|"Truy vấn vector"| Semantic
+    Pipeline -->|"Truy vấn từ khóa"| Lexical
+
+    Semantic -->|"Tìm kiếm dense"| VectorDB
+    Lexical -->|"Tìm kiếm sparse"| BM25Index
+
+    Semantic -->|"Ứng viên dense"| Merge
+    Lexical -->|"Ứng viên sparse"| Merge
+
+    Merge -->|"Chấm điểm lại & lọc threshold"| Decision
+
+    Decision -->|"Có"| Reorder
+    Decision -->|"Không"| PageIndex
+
+    PageIndex -->|"Tài liệu bổ trợ"| Reorder
+
+    Reorder -->|"Context sắp xếp tối ưu"| LLM
+    LLM -->|"Trả lời kèm Citation [Nguồn, Năm]"| UI
+    UI -->|"Hiển thị câu trả lời & nguồn"| User
+
+    classDef user fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000;
+    classDef ui fill:#efebe9,stroke:#4e342e,stroke-width:2px,color:#000;
+    classDef pipe fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000;
+    classDef model fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#000;
+    classDef db fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#000;
+
+    class User user;
+    class UI ui;
+    class Rewriter,LLM model;
+    class Pipeline,Semantic,Lexical,Merge,PageIndex,Reorder pipe;
+    class VectorDB,BM25Index db;
 ```
 
 ---
@@ -526,11 +582,12 @@ run_dashboard()
 ### Phân Công Công Việc
 
 | Thành viên | MSSV | Nhiệm vụ | Trạng thái |
-|-----------|------|----------|------------|
-| | | | |
-| | | | |
-| | | | |
-| | | | |
+| :--- | :--- | :--- | :--- |
+| **An** (Project Lead) | `2A202600698` | <br>- Tích hợp Retrieval Pipeline (Task 9), Reranking (Task 7) <br>- Quản lý repository nhóm, điều phối tích hợp code chung. | `[/] Đang thực hiện` |
+| **Phương** | `2A202600616` | <br>- Thu thập dữ liệu pháp luật (Task 1), crawl bài báo nghệ sĩ (Task 2) <br>- Convert tài liệu sang Markdown (Task 3). | `[/] Đang thực hiện` |
+| **Quyền** | `2A202600676` | <br>- Chunking & Indexing (Task 4), cài đặt Semantic Search (Task 5) <br>- Cài đặt BM25 Lexical Search (Task 6). | `[/] Đang thực hiện` |
+| **Hải** | `2A202600862` | <br>- Sinh câu trả lời có Citation (Task 10), Reorder để tránh Lost in the Middle <br>- Xây dựng ứng dụng Chatbot Streamlit. | `[/] Đang thực hiện` |
+| **Quang** | `2A202600931` | <br>- Cài đặt PageIndex Vectorless Fallback (Task 8) <br>- Thiết lập Golden Dataset, viết script DeepEval chạy đánh giá chất lượng A/B. | `[/] Đang thực hiện` |
 
 ---
 
