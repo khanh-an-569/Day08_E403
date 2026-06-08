@@ -1,66 +1,43 @@
-"""
-Task 5 — Semantic Search Module.
+import os
+import chromadb
+from sentence_transformers import SentenceTransformer
 
-Viết module tìm kiếm ngữ nghĩa (dense retrieval) trên vector store.
+VECTOR_DB_DIR = os.path.join("data", "vector_db")
 
-Yêu cầu:
-    - Input: query string + top_k
-    - Output: danh sách chunks có score, sorted descending
-    - Phải tương thích với embedding model và vector store ở Task 4
-"""
-
-
-def semantic_search(query: str, top_k: int = 10) -> list[dict]:
-    """
-    Tìm kiếm ngữ nghĩa sử dụng vector similarity.
-
-    Args:
-        query: Câu truy vấn
-        top_k: Số lượng kết quả tối đa
-
-    Returns:
-        List of {
-            'content': str,      # Nội dung chunk
-            'score': float,      # Cosine similarity score
-            'metadata': dict     # source, doc_type, chunk_index
-        }
-        Sorted by score descending.
-    """
-    # TODO: Implement semantic search
-    #
-    # Bước 1: Embed query bằng cùng model ở Task 4
-    # Bước 2: Query vector store (cosine similarity)
-    # Bước 3: Return top_k results
-    #
-    # Ví dụ với Weaviate:
-    # import weaviate
-    # from sentence_transformers import SentenceTransformer
-    #
-    # model = SentenceTransformer("BAAI/bge-m3")
-    # query_embedding = model.encode(query).tolist()
-    #
-    # client = weaviate.connect_to_local()
-    # collection = client.collections.get("DrugLawDocs")
-    #
-    # results = collection.query.near_vector(
-    #     near_vector=query_embedding,
-    #     limit=top_k,
-    #     return_metadata=MetadataQuery(distance=True)
-    # )
-    #
-    # return [
-    #     {
-    #         "content": obj.properties["content"],
-    #         "score": 1 - obj.metadata.distance,  # distance → similarity
-    #         "metadata": {"source": obj.properties["source"], ...}
-    #     }
-    #     for obj in results.objects
-    # ]
-    raise NotImplementedError("Implement semantic_search")
-
+class SemanticSearcher:
+    def __init__(self):
+        self.embedder = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2', device='cpu')
+        self.client = chromadb.PersistentClient(path=VECTOR_DB_DIR)
+        self.collection = self.client.get_collection(name="law_and_news_collection")
+        
+    def search(self, query: str, top_k: int = 5):
+        query_embedding = self.embedder.encode([query]).tolist()
+        
+        results = self.collection.query(
+            query_embeddings=query_embedding,
+            n_results=top_k
+        )
+        
+        formatted_results = []
+        if results['documents'] and len(results['documents']) > 0:
+            docs = results['documents'][0]
+            metadatas = results['metadatas'][0]
+            distances = results['distances'][0]
+            
+            for doc, meta, dist in zip(docs, metadatas, distances):
+                formatted_results.append({
+                    "content": doc,
+                    "source": meta.get('source', 'unknown'),
+                    "category": meta.get('category', 'unknown'),
+                    # Convert distance to similarity score
+                    "score": 1.0 / (1.0 + dist)
+                })
+                
+        return formatted_results
 
 if __name__ == "__main__":
-    # Test
-    results = semantic_search("hình phạt cho tội tàng trữ ma tuý", top_k=5)
-    for r in results:
-        print(f"[{r['score']:.3f}] {r['content'][:100]}...")
+    searcher = SemanticSearcher()
+    res = searcher.search("Hình phạt cho tội tổ chức sử dụng ma túy")
+    print("--- SEMANTIC SEARCH RESULTS ---")
+    for r in res:
+        print(f"[{r['score']:.4f}] {r['source']}: {r['content'][:100]}...")

@@ -1,191 +1,51 @@
-"""
-Task 7 — Reranking Module.
+from src.task5_semantic_search import SemanticSearcher
+from src.task6_lexical_search import LexicalSearcher
 
-Chọn 1 trong các phương pháp:
-    - Cross-encoder reranker: Jina Reranker v2 (multilingual) hoặc Qwen3-Reranker
-    - MMR (Maximal Marginal Relevance): tự implement
-    - RRF (Reciprocal Rank Fusion): tự implement
-
-Nếu dùng MMR hoặc RRF, đảm bảo hiểu và giải thích được cơ chế.
-"""
-
-from typing import Optional
-
-
-def rerank_cross_encoder(
-    query: str, candidates: list[dict], top_k: int = 5
-) -> list[dict]:
-    """
-    Rerank candidates sử dụng cross-encoder model.
-
-    Args:
-        query: Câu truy vấn
-        candidates: List of {'content': str, 'score': float, 'metadata': dict}
-        top_k: Số lượng kết quả sau rerank
-
-    Returns:
-        List of top_k candidates, re-scored và sorted by rerank_score descending.
-    """
-    # TODO: Implement cross-encoder reranking
-    #
-    # Option A: Jina Reranker API
-    # import requests
-    # response = requests.post(
-    #     "https://api.jina.ai/v1/rerank",
-    #     headers={"Authorization": f"Bearer {JINA_API_KEY}"},
-    #     json={
-    #         "model": "jina-reranker-v2-base-multilingual",
-    #         "query": query,
-    #         "documents": [c["content"] for c in candidates],
-    #         "top_n": top_k
-    #     }
-    # )
-    # reranked = response.json()["results"]
-    # return [
-    #     {**candidates[r["index"]], "score": r["relevance_score"]}
-    #     for r in reranked
-    # ]
-    #
-    # Option B: Local model (Qwen3-Reranker)
-    # from transformers import AutoModelForSequenceClassification, AutoTokenizer
-    # ...
-    raise NotImplementedError("Implement rerank_cross_encoder")
-
-
-def rerank_mmr(
-    query_embedding: list[float],
-    candidates: list[dict],
-    top_k: int = 5,
-    lambda_param: float = 0.7,
-) -> list[dict]:
-    """
-    Maximal Marginal Relevance — chọn candidates vừa relevant vừa diverse.
-
-    MMR = λ * sim(query, doc) - (1-λ) * max(sim(doc, selected_docs))
-
-    Args:
-        query_embedding: Vector embedding của query
-        candidates: List of {'content': str, 'score': float, 'embedding': list, 'metadata': dict}
-        top_k: Số lượng kết quả
-        lambda_param: Trade-off giữa relevance (1.0) và diversity (0.0)
-
-    Returns:
-        List of top_k candidates selected by MMR.
-    """
-    # TODO: Implement MMR
-    #
-    # selected = []
-    # remaining = list(range(len(candidates)))
-    #
-    # for _ in range(min(top_k, len(candidates))):
-    #     best_idx = None
-    #     best_score = float('-inf')
-    #
-    #     for idx in remaining:
-    #         # Relevance to query
-    #         relevance = cosine_sim(query_embedding, candidates[idx]["embedding"])
-    #
-    #         # Max similarity to already selected
-    #         max_sim_to_selected = 0
-    #         for sel_idx in selected:
-    #             sim = cosine_sim(candidates[idx]["embedding"], candidates[sel_idx]["embedding"])
-    #             max_sim_to_selected = max(max_sim_to_selected, sim)
-    #
-    #         # MMR score
-    #         mmr_score = lambda_param * relevance - (1 - lambda_param) * max_sim_to_selected
-    #
-    #         if mmr_score > best_score:
-    #             best_score = mmr_score
-    #             best_idx = idx
-    #
-    #     selected.append(best_idx)
-    #     remaining.remove(best_idx)
-    #
-    # return [candidates[i] for i in selected]
-    raise NotImplementedError("Implement rerank_mmr")
-
-
-def rerank_rrf(
-    ranked_lists: list[list[dict]], top_k: int = 5, k: int = 60
-) -> list[dict]:
-    """
-    Reciprocal Rank Fusion — gộp kết quả từ nhiều ranker.
-
-    RRF(d) = Σ 1 / (k + rank_r(d))
-
-    Args:
-        ranked_lists: List of ranked result lists (mỗi list từ 1 ranker)
-        top_k: Số lượng kết quả cuối cùng
-        k: Smoothing constant (default=60, từ paper Cormack et al. 2009)
-
-    Returns:
-        List of top_k candidates sorted by RRF score descending.
-    """
-    # TODO: Implement RRF
-    #
-    # rrf_scores = {}  # content -> score
-    # content_map = {}  # content -> full dict
-    #
-    # for ranked_list in ranked_lists:
-    #     for rank, item in enumerate(ranked_list, 1):
-    #         key = item["content"]
-    #         rrf_scores[key] = rrf_scores.get(key, 0) + 1 / (k + rank)
-    #         content_map[key] = item
-    #
-    # # Sort by RRF score
-    # sorted_items = sorted(rrf_scores.items(), key=lambda x: x[1], reverse=True)
-    #
-    # results = []
-    # for content, score in sorted_items[:top_k]:
-    #     item = content_map[content].copy()
-    #     item["score"] = score
-    #     results.append(item)
-    #
-    # return results
-    raise NotImplementedError("Implement rerank_rrf")
-
-
-# =============================================================================
-# Main rerank interface
-# =============================================================================
-
-def rerank(
-    query: str,
-    candidates: list[dict],
-    top_k: int = 5,
-    method: str = "cross_encoder",  # "cross_encoder" | "mmr" | "rrf"
-) -> list[dict]:
-    """
-    Unified reranking interface.
-
-    Args:
-        query: Câu truy vấn
-        candidates: Danh sách candidates từ retrieval
-        top_k: Số lượng kết quả sau rerank
-        method: Phương pháp reranking
-
-    Returns:
-        List of top_k reranked candidates.
-    """
-    if method == "cross_encoder":
-        return rerank_cross_encoder(query, candidates, top_k)
-    elif method == "mmr":
-        # Cần query_embedding - embed query trước
-        raise NotImplementedError("Call rerank_mmr with query_embedding")
-    elif method == "rrf":
-        # RRF cần nhiều ranked lists - gọi riêng
-        raise NotImplementedError("Call rerank_rrf with ranked_lists")
-    else:
-        raise ValueError(f"Unknown rerank method: {method}")
-
+class RRFReranker:
+    def __init__(self):
+        self.semantic_searcher = SemanticSearcher()
+        self.lexical_searcher = LexicalSearcher()
+        
+    def search(self, query: str, top_k: int = 5, rrf_k: int = 60):
+        candidate_count = max(top_k * 4, 50)
+        semantic_results = self.semantic_searcher.search(query, top_k=candidate_count)
+        lexical_results = self.lexical_searcher.search(query, top_k=candidate_count)
+        
+        # Hợp nhất và chấm điểm lại bằng thuật toán Reciprocal Rank Fusion
+        rrf_scores = {}
+        
+        # Tính điểm cho Semantic
+        for rank, res in enumerate(semantic_results):
+            content = res['content']
+            if content not in rrf_scores:
+                rrf_scores[content] = {"score": 0.0, "source": res['source'], "category": res['category']}
+            rrf_scores[content]["score"] += 1.0 / (rrf_k + rank + 1)
+            
+        # Tính điểm cho Lexical
+        for rank, res in enumerate(lexical_results):
+            content = res['content']
+            if content not in rrf_scores:
+                rrf_scores[content] = {"score": 0.0, "source": res['source'], "category": res['category']}
+            rrf_scores[content]["score"] += 1.0 / (rrf_k + rank + 1)
+            
+        # Sắp xếp lại theo điểm RRF giảm dần
+        sorted_rrf = sorted(rrf_scores.items(), key=lambda x: x[1]['score'], reverse=True)
+        
+        # Format kết quả đầu ra
+        final_results = []
+        for content, data in sorted_rrf[:top_k]:
+            final_results.append({
+                "content": content,
+                "source": data['source'],
+                "category": data['category'],
+                "score": data['score']
+            })
+            
+        return final_results
 
 if __name__ == "__main__":
-    # Test with dummy data
-    dummy_candidates = [
-        {"content": "Điều 248: Tội tàng trữ trái phép chất ma tuý", "score": 0.8, "metadata": {}},
-        {"content": "Nghệ sĩ X bị bắt vì sử dụng ma tuý", "score": 0.7, "metadata": {}},
-        {"content": "Hình phạt tù từ 2-7 năm cho tội tàng trữ", "score": 0.6, "metadata": {}},
-    ]
-    results = rerank("hình phạt tàng trữ ma tuý", dummy_candidates, top_k=2)
-    for r in results:
-        print(f"[{r['score']:.3f}] {r['content']}")
+    reranker = RRFReranker()
+    res = reranker.search("Hình phạt nào cho ca sĩ tổ chức sử dụng ma túy?", top_k=3)
+    print("--- RRF HYBRID SEARCH RESULTS ---")
+    for r in res:
+        print(f"[{r['score']:.4f}] {r['source']}: {r['content'][:100]}...")

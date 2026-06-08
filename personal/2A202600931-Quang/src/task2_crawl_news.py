@@ -1,82 +1,60 @@
-"""
-Task 2 — Crawl bài báo về nghệ sĩ liên quan tới ma tuý.
-
-Hướng dẫn:
-    1. Crawl tối thiểu 5 bài báo từ các trang tin tức Việt Nam.
-    2. Sử dụng Crawl4AI hoặc thư viện crawling tương tự.
-    3. Lưu output vào data/landing/news/
-    4. Mỗi bài lưu 1 file JSON với metadata (url, title, date_crawled, content).
-
-Cài đặt:
-    pip install crawl4ai
-"""
-
-import asyncio
+import os
 import json
+import asyncio
 from datetime import datetime
-from pathlib import Path
+from crawl4ai import AsyncWebCrawler
 
-DATA_DIR = Path(__file__).parent.parent / "data" / "landing" / "news"
-
-
-def setup_directory():
-    """Tạo thư mục data/landing/news/ nếu chưa có."""
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-
-
-# TODO: Điền danh sách URL bài báo cần crawl
-ARTICLE_URLS = [
-    # Ví dụ:
-    # "https://vnexpress.net/...",
-    # "https://tuoitre.vn/...",
-    # "https://thanhnien.vn/...",
+URLS = [
+    "https://nld.com.vn/cong-an-tp-hcm-ket-luan-vu-ca-si-chi-dan-dung-ma-tuy-196250821135822527.htm",
+    "https://vnexpress.net/anh-em-ca-si-chi-dan-ru-nhieu-nguoi-choi-ma-tuy-nhu-the-nao-4929804.html",
+    "https://baovephapluat.vn/cong-to-kiem-sat-tu-phap/truy-to/truy-to-ca-si-chi-dan-va-226-bi-can-trong-vu-an-ma-tuy-lien-quan-den-tiep-vien-hang-khong-196299.html",
+    "https://pcmatuy.bocongan.gov.vn/Tin-t%E1%BB%A9c-s%E1%BB%B1-ki%E1%BB%87n/articleType/ArticleView/articleId/2019/ca-s-chi-dn-v-anh-rut-r-bn-nhu-t-ma-ty-v-s-dng",
+    "https://vnexpress.net/nguoi-mau-andrea-aybar-cung-tro-ly-lam-tiec-ma-tuy-trong-can-ho-cao-cap-5059429.html",
+    "https://laodong.vn/van-hoa-giai-tri/hinh-anh-an-tay-andrea-aybar-khi-mat-het-su-nghiep-1422675.ldo",
+    "https://vov.vn/phap-luat/vu-an-ma-tuy-lien-quan-den-ca-si-chi-dan-vi-sao-nguoi-mau-an-tay-bi-truy-to-post1281931.vov",
+    "https://tuoitre.vn/khoi-to-3-bi-can-trong-vu-ca-si-miu-le-su-dung-ma-tuy-o-cat-ba-20260514230349573.htm",
+    "https://vnexpress.net/ca-si-miu-le-bi-bat-voi-cao-buoc-to-chuc-su-dung-ma-tuy-5074769.html",
+    "https://tienphong.vn/nghe-si-dinh-ma-tuy-khoang-trong-sau-nhung-cu-truot-nga-post1845503.tpo",
+    "https://vov.vn/giai-tri/chua-day-1-thang-3-nghe-si-viet-bi-khoi-to-vi-lien-quan-ma-tuy-gay-chan-dong-post1293496.vov",
+    "https://baolaocai.vn/bao-dong-tinh-trang-nghe-si-dung-ma-tuy-va-nhung-he-luy-voi-xa-hoi-post900028.html",
+    "https://thanhnien.vn/nghe-si-tu-nguyen-xet-nghiem-ma-tuy-showbiz-dang-bat-an-den-muc-nao-185260526105918638.htm",
+    "https://laodong.vn/phap-luat/bo-cong-an-khoi-to-bat-tam-giam-rapper-binh-gold-1587086.ldo",
+    "https://tuoitre.vn/rapper-binh-gold-duong-tinh-ma-tuy-khi-lai-xe-co-dau-hieu-gay-roi-trat-tu-cong-cong-20250724080230866.htm",
+    "https://vnexpress.net/rapper-binh-gold-tiep-tuc-duong-tinh-voi-ma-tuy-lai-cuop-taxi-4919259.html"
 ]
 
+OUTPUT_DIR = os.path.join("data", "landing", "news")
 
-async def crawl_article(url: str) -> dict:
-    """
-    Crawl một bài báo và trả về dict chứa metadata + content.
+async def crawl_articles():
+    if not os.path.exists(OUTPUT_DIR):
+        os.makedirs(OUTPUT_DIR)
 
-    Returns:
-        {
-            "url": str,
-            "title": str,
-            "date_crawled": str (ISO format),
-            "content_markdown": str
-        }
-    """
-    from crawl4ai import AsyncWebCrawler
-
-    # TODO: Implement crawling logic
-    # async with AsyncWebCrawler() as crawler:
-    #     result = await crawler.arun(url=url)
-    #     return {
-    #         "url": url,
-    #         "title": result.metadata.get("title", "Unknown"),
-    #         "date_crawled": datetime.now().isoformat(),
-    #         "content_markdown": result.markdown,
-    #     }
-    raise NotImplementedError("Implement crawl_article")
-
-
-async def crawl_all():
-    """Crawl toàn bộ bài báo trong ARTICLE_URLS."""
-    setup_directory()
-
-    for i, url in enumerate(ARTICLE_URLS, 1):
-        print(f"[{i}/{len(ARTICLE_URLS)}] Crawling: {url}")
-        article = await crawl_article(url)
-
-        # Lưu file JSON
-        filename = f"article_{i:02d}.json"
-        filepath = DATA_DIR / filename
-        filepath.write_text(json.dumps(article, ensure_ascii=False, indent=2))
-        print(f"  ✓ Saved: {filepath}")
-
+    # Initialize the AsyncWebCrawler
+    async with AsyncWebCrawler() as crawler:
+        for i, url in enumerate(URLS):
+            try:
+                print(f"Crawling [{i+1}/{len(URLS)}]: {url}")
+                result = await crawler.arun(url=url)
+                
+                if result.markdown:
+                    # We save the result to a JSON file with metadata
+                    article_data = {
+                        "url": url,
+                        "crawl_date": datetime.now().isoformat(),
+                        "content": result.markdown
+                    }
+                    
+                    filename = f"article_{i+1}.json"
+                    filepath = os.path.join(OUTPUT_DIR, filename)
+                    
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        json.dump(article_data, f, ensure_ascii=False, indent=2)
+                    
+                    print(f"  -> Saved to {filepath}")
+                else:
+                    print(f"  -> No content retrieved for {url}")
+            except Exception as e:
+                print(f"  -> Error crawling {url}: {e}")
 
 if __name__ == "__main__":
-    if not ARTICLE_URLS:
-        print("⚠ Hãy điền ARTICLE_URLS trước khi chạy!")
-        print("Gợi ý: tìm bài báo trên VnExpress, Tuổi Trẻ, Thanh Niên, ...")
-    else:
-        asyncio.run(crawl_all())
+    asyncio.run(crawl_articles())
