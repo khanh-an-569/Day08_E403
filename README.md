@@ -1,4 +1,4 @@
-# Dự Án Nhóm — Báo Cáo & Tài Liệu RAG Chatbot
+# Dự án nhóm — Báo cáo & Tài liệu RAG Chatbot
 
 Dự án này là hệ thống **RAG Chatbot** tra cứu văn bản pháp luật phòng chống ma túy và tin tức nghệ sĩ Việt Nam liên quan, được xây dựng bởi **Nhóm D2 (E403)**.
 
@@ -25,7 +25,7 @@ Hệ thống đã đạt **100% các yêu cầu chung** đề ra trong đề bà
 
 ---
 
-## 🏗️ Kiến Trúc Hệ Thống
+## Kiến Trúc Hệ Thống
 
 Dưới đây là sơ đồ luồng hoạt động từ khi người dùng nhập câu hỏi cho đến khi nhận được câu trả lời kèm nguồn tham khảo:
 
@@ -91,19 +91,19 @@ graph TD
 
 ---
 
-## 👥 Phân Công Công Việc
+## Phân Công Công Việc
 
 | Thành viên | MSSV | Nhiệm vụ | Trạng thái |
 | :--- | :--- | :--- | :--- |
 | **An** (Project Lead) | `2A202600698` | - Tích hợp Retrieval Pipeline (Task 9) <br>- Reranking (Task 7) <br>- Quản lý repository nhóm, điều phối tích hợp code chung. | `[✓] Đã hoàn thành` |
-| **Phương** | `2A202600616` | - Thu thập dữ liệu pháp luật (Task 1) <br>- Crawl bài báo nghệ sĩ (Task 2) <br>- Convert tài liệu sang Markdown (Task 3). | `[✓] Đã hoàn thành` |
+| **Phương** | `2A202600616` | - Thu thập dữ liệu pháp luật (Task 1) <br>- Crawl bài báo nghệ sĩ (Task 2) <br>- Convert tài liệu sang Markdown (Task 3) <br>- Xây dựng & Sửa giao diện Streamlit Chatbot <br>- Thiết lập tài liệu & Sơ đồ README dự án. | `[✓] Đã hoàn thành` |
 | **Quyền** | `2A202600676` | - Chunking & Indexing (Task 4) <br>- Semantic Search (Task 5) <br>- BM25 Lexical Search (Task 6). | `[✓] Đã hoàn thành` |
 | **Hải** | `2A202600862` | - Sinh câu trả lời có Citation (Task 10) <br>- Reorder để tránh Lost in the Middle. | `[✓] Đã hoàn thành` |
 | **Quang** | `2A202600931` | - PageIndex Vectorless Fallback (Task 8) <br>- Xây dựng ứng dụng Chatbot Streamlit. | `[✓] Đã hoàn thành` |
 
 ---
 
-## 🚀 Hướng Dẫn Khởi Chạy Nhanh (Quick Start)
+## Hướng Dẫn Khởi Chạy Nhanh (Quick Start)
 
 ### 1. Chuẩn bị môi trường
 Di chuyển vào thư mục `/group` và copy file `.env` chứa các API key của bạn:
