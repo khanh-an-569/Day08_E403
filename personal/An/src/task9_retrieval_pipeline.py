@@ -114,7 +114,7 @@ def retrieve(
         ):
 
             print(
-                f"⚠ Hybrid score "
+                f"Hybrid score "
                 f"({best_score:.3f}) "
                 f"< threshold "
                 f"({score_threshold:.3f})"
