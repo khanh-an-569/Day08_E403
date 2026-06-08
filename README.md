@@ -96,7 +96,7 @@ graph TD
 | Thành viên | MSSV | Nhiệm vụ | Trạng thái |
 | :--- | :--- | :--- | :--- |
 | **An** (Project Lead) | `2A202600698` | - Tích hợp Retrieval Pipeline (Task 9) <br>- Reranking (Task 7) <br>- Quản lý repository nhóm, điều phối tích hợp code chung. | `[✓] Đã hoàn thành` |
-| **Phương** | `2A202600616` | - Thu thập dữ liệu pháp luật (Task 1) <br>- Crawl bài báo nghệ sĩ (Task 2) <br>- Convert tài liệu sang Markdown (Task 3). | `[✓] Đã hoàn thành` |
+| **Phương** | `2A202600616` | - Thu thập dữ liệu pháp luật (Task 1) <br>- Crawl bài báo nghệ sĩ (Task 2) <br>- Convert tài liệu sang Markdown (Task 3) <br>- Xây dựng & Sửa giao diện Streamlit Chatbot <br>- Thiết lập tài liệu & Sơ đồ README dự án. | `[✓] Đã hoàn thành` |
 | **Quyền** | `2A202600676` | - Chunking & Indexing (Task 4) <br>- Semantic Search (Task 5) <br>- BM25 Lexical Search (Task 6). | `[✓] Đã hoàn thành` |
 | **Hải** | `2A202600862` | - Sinh câu trả lời có Citation (Task 10) <br>- Reorder để tránh Lost in the Middle. | `[✓] Đã hoàn thành` |
 | **Quang** | `2A202600931` | - PageIndex Vectorless Fallback (Task 8) <br>- Xây dựng ứng dụng Chatbot Streamlit. | `[✓] Đã hoàn thành` |
