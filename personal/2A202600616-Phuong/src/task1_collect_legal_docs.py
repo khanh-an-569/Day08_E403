@@ -26,22 +26,33 @@ DATA_DIR = Path(__file__).parent.parent / "data" / "landing" / "legal"
 def setup_directory():
     """Tạo thư mục data/landing/legal/ nếu chưa có."""
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    print(f"✓ Thư mục đã sẵn sàng: {DATA_DIR}")
+    print(f"[OK] Thu muc da san sang: {DATA_DIR}")
 
 
-# TODO: Tải file PDF/DOCX về DATA_DIR
-# Có thể tải thủ công hoặc viết script download nếu có direct link.
-#
-# Ví dụ nếu có direct link:
-#
-# import requests
-#
-# def download_file(url: str, filename: str):
-#     response = requests.get(url)
-#     filepath = DATA_DIR / filename
-#     filepath.write_bytes(response.content)
-#     print(f"✓ Đã tải: {filepath}")
+def check_existing_files():
+    """Kiểm tra và liệt kê các file pháp luật hiện có trong thư mục DATA_DIR."""
+    setup_directory()
+    valid_extensions = {".pdf", ".docx", ".doc"}
+    files = [f for f in DATA_DIR.iterdir() if f.is_file() and f.suffix.lower() in valid_extensions]
+    
+    print(f"\n--- Cac file phap luat hien co ({len(files)} file): ---")
+    for idx, f in enumerate(files, 1):
+        size_kb = f.stat().st_size / 1024
+        print(f"{idx}. {f.name} ({size_kb:.2f} KB)")
+    
+    if len(files) < 3:
+        print("\n[Canh bao] Hien tai dang co it hon 3 file phap luat trong thu muc.")
+        print("Vui long tai them file va luu vao thu muc nay de dap ung yeu cau toi thieu (>= 3 file).")
+    else:
+        print("\n[OK] Thu muc da co du so luong file toi thieu (>= 3 file).")
+    return files
 
 
 if __name__ == "__main__":
-    setup_directory()
+    import sys
+    if hasattr(sys.stdout, 'reconfigure'):
+        try:
+            sys.stdout.reconfigure(encoding='utf-8')
+        except Exception:
+            pass
+    check_existing_files()
