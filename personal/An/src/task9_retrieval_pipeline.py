@@ -1,9 +1,15 @@
 from concurrent.futures import ThreadPoolExecutor
 
-from task5_semantic_search import semantic_search
-from task6_lexical_search import lexical_search
-from task7_reranking import rerank, rerank_rrf
-from task8_pageindex_vectorless import pageindex_search
+try:
+    from .task5_semantic_search import semantic_search
+    from .task6_lexical_search import lexical_search
+    from .task7_reranking import rerank, rerank_rrf
+    from .task8_pageindex_vectorless import pageindex_search
+except ImportError:
+    from task5_semantic_search import semantic_search
+    from task6_lexical_search import lexical_search
+    from task7_reranking import rerank, rerank_rrf
+    from task8_pageindex_vectorless import pageindex_search
 
 
 # =============================================================================
@@ -35,6 +41,9 @@ def retrieve(
         # STEP 1 - RUN DENSE + SPARSE IN PARALLEL
         # ==========================================================
 
+        dense_results = []
+        sparse_results = []
+
         with ThreadPoolExecutor(max_workers=2) as executor:
             dense_future = executor.submit(
                 semantic_search,
@@ -48,8 +57,15 @@ def retrieve(
                 top_k * 2
             )
 
-            dense_results = dense_future.result()
-            sparse_results = sparse_future.result()
+            try:
+                dense_results = dense_future.result()
+            except Exception as e:
+                print(f"Semantic search failed: {e}")
+
+            try:
+                sparse_results = sparse_future.result()
+            except Exception as e:
+                print(f"Lexical search failed: {e}")
 
         print(
             f"Dense results: {len(dense_results)} | "
@@ -104,9 +120,19 @@ def retrieve(
         best_score = 0.0
 
         if final_results:
-            best_score = float(
-                final_results[0].get("score", 0.0)
-            )
+            # Map content to its original dense/semantic score to perform threshold check
+            # because final_results contain fused RRF scores (which are very small, < 0.05).
+            dense_scores = {item["content"]: item["score"] for item in dense_results}
+            # Find the maximum semantic score among the top returned results
+            semantic_scores_in_final = [
+                dense_scores.get(item["content"], 0.0) for item in final_results
+            ]
+            best_semantic_score = max(semantic_scores_in_final) if semantic_scores_in_final else 0.0
+            
+            # Use the actual score of the top candidate if it's not an RRF score,
+            # or fallback to the best semantic score.
+            top_candidate_score = float(final_results[0].get("score", 0.0))
+            best_score = max(top_candidate_score, best_semantic_score)
 
         if (
             not final_results

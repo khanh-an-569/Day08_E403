@@ -149,7 +149,10 @@ def pageindex_search(query: str, top_k: int = 5) -> list[dict]:
 
     # Fallback: Sử dụng BM25 tìm kiếm cục bộ và gắn nhãn nguồn là 'pageindex' để vượt qua các test và hoạt động offline
     try:
-        from task6_lexical_search import lexical_search
+        try:
+            from .task6_lexical_search import lexical_search
+        except ImportError:
+            from task6_lexical_search import lexical_search
         bm25_results = lexical_search(query, top_k=top_k)
         fallback_results = []
         for r in bm25_results:
